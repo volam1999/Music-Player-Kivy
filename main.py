@@ -90,32 +90,44 @@ class SongCover(MDBoxLayout):
             self.updateTimeEvent.cancel()
             self.stopRotate()
             self.isResume = True
-           
 
     def next(self):
+        os.remove(f"{self.current_song}.jpg")
+        self.isResume = False
+        self.updateProcessbarEvent.cancel()
+        self.updateTimeEvent.cancel()
+        self.sound.stop()
+
         if self.current_song < len(list_music) - 1:
-            self.isResume = False
-            self.updateProcessbarEvent.cancel()
-            self.updateTimeEvent.cancel()
             self.current_song += 1
-            self.sound.stop()
-            self.playSong()
-        
+        else:
+            self.current_song = 0
+
+        self.playSong()
+
     def previous(self):
+        os.remove(f"{self.current_song}.jpg")
+        self.isResume = False
+        self.updateProcessbarEvent.cancel()
+        self.updateTimeEvent.cancel()
+
         if self.current_song > 0:
-            self.isResume = False
-            self.updateProcessbarEvent.cancel()
-            self.updateTimeEvent.cancel()
             self.current_song -= 1
-            self.sound.stop()
-            self.playSong() 
+        else:
+            self.current_song = len(list_music) - 1
+        self.sound.stop()
+        self.playSong()
 
     def updateProcessbar(self, value):
         if self.process_bar.value < self.sound.length:
             self.process_bar.value += 1
         else:
-            self.updateProcessbarEvent.cancel()
-            self.updateTimeEvent.cancel()
+            if self.sound.loop:
+                self.process_bar.value = 0
+                self.current_time.text = "00:00"
+            else:
+                self.updateProcessbarEvent.cancel()
+                self.updateTimeEvent.cancel()
     
     def setTime(self, t):
         currtentTime = time.strftime("%M:%S", time.gmtime(self.process_bar.value))
@@ -127,6 +139,20 @@ class SongCover(MDBoxLayout):
     def seek(self):
         if self.sound:
             self.sound.seek(self.process_bar.value)
+
+    def loop(self):
+        if not self.sound.loop:
+            self.sound.loop = True
+            self.btn_loop.text_color = [37/255, 150/255, 190/255, 1]
+        else:
+            self.sound.loop = False
+            self.btn_loop.text_color = [1, 1, 1, 1]
+    
+    def skipForward(self):
+        self.skipEvent =  Clock.schedule_interval(self.updateProcessbar, .1)
+    
+    def doSkipForward(self):
+        self.skipEvent.cancel()
 
 class MainApp(MDApp):
     def build(self):

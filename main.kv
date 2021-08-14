@@ -23,6 +23,7 @@
             btn_play: btn_play
             current_time: current_time
             total_time: total_time
+            btn_loop: btn_loop
 
             RotatingImage:
                 angle: sc.angle
@@ -74,7 +75,9 @@
 
             MDBoxLayout:
                 MyIcon:
+                    id: btn_loop
                     icon: 'restart'
+                    on_press: sc.loop()
                 MyIcon:
                     icon: 'skip-previous-outline'
                     on_press: sc.previous()
@@ -86,6 +89,8 @@
                     on_press: sc.play()
                 MyIcon:
                     icon: 'skip-forward'
+                    on_press: sc.skipForward()
+                    on_release: sc.doSkipForward()
                 MyIcon:
                     icon: 'skip-next-outline'
                     on_press: sc.next()
