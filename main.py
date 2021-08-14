@@ -97,6 +97,7 @@ class SongCover(MDBoxLayout):
         self.updateProcessbarEvent.cancel()
         self.updateTimeEvent.cancel()
         self.sound.stop()
+        self.btn_loop.text_color = [1, 1, 1, 1]
 
         if self.current_song < len(list_music) - 1:
             self.current_song += 1
@@ -110,6 +111,7 @@ class SongCover(MDBoxLayout):
         self.isResume = False
         self.updateProcessbarEvent.cancel()
         self.updateTimeEvent.cancel()
+        self.btn_loop.text_color = [1, 1, 1, 1]
 
         if self.current_song > 0:
             self.current_song -= 1
@@ -126,6 +128,7 @@ class SongCover(MDBoxLayout):
                 self.process_bar.value = 0
                 self.current_time.text = "00:00"
             else:
+                self.stopRotate()
                 self.updateProcessbarEvent.cancel()
                 self.updateTimeEvent.cancel()
     
