@@ -103,7 +103,7 @@ class SongCover(MDBoxLayout):
             self.current_song += 1
         else:
             self.current_song = 0
-
+        self.stopRotate()
         self.playSong()
 
     def previous(self):
@@ -118,6 +118,7 @@ class SongCover(MDBoxLayout):
         else:
             self.current_song = len(list_music) - 1
         self.sound.stop()
+        self.stopRotate()
         self.playSong()
 
     def updateProcessbar(self, value):
@@ -156,6 +157,16 @@ class SongCover(MDBoxLayout):
     
     def doSkipForward(self):
         self.skipEvent.cancel()
+    
+    def skipBackward(self):
+        self.skipEventBackward =  Clock.schedule_interval(self.updateProcessbarBackward, .1)
+
+    def doSkipBackward(self):
+        self.skipEventBackward.cancel()
+
+    def updateProcessbarBackward(self, value):
+        if self.process_bar.value > 0:
+            self.process_bar.value -= 1
 
 class MainApp(MDApp):
     def build(self):
